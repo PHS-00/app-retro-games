@@ -19,6 +19,7 @@ import 'package:get/get.dart';
 
 import 'view/home_page.dart';
 import 'view/catalog_page.dart';
+import 'view/games_detail_page.dart';
 
 void main() {
   runApp(const RetroVaultApp());
@@ -42,15 +43,11 @@ class RetroVaultApp extends StatelessWidget {
       initialRoute: '/',
 
       getPages: [
-        GetPage(
-          name: '/',
-          page: () => const HomePage(),
-        ),
+        GetPage(name: '/', page: () => const HomePage()),
 
-        GetPage(
-          name: '/catalogo',
-          page: () => const CatalogPage(),
-        ),
+        GetPage(name: '/catalogo', page: () => const CatalogPage()),
+
+        GetPage(name: '/detalhe', page: () => const GameDetailPage()),
       ],
     );
   }
