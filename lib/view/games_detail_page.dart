@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/favorites_controller.dart';
 
 class GameModel {
   final String titulo;
@@ -62,9 +63,9 @@ class GameDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FavoritesController favController = Get.find<FavoritesController>();
     final Map<String, dynamic> argumentos =
         (Get.arguments as Map<String, dynamic>?) ?? {};
-
     final GameModel jogo = GameModel.fromMap(argumentos);
 
     return Scaffold(
@@ -113,6 +114,26 @@ class GameDetailPage extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios_new),
               onPressed: () => Get.back(),
             ),
+            actions: [
+              Obx(() {
+                final isFav = favController.isFavorito(argumentos);
+                return IconButton(
+                  tooltip: isFav ? "Remover dos favoritos" : "Favoritar",
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) =>
+                        ScaleTransition(scale: animation, child: child),
+                    child: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      key: ValueKey(isFav),
+                      color: isFav ? Colors.red.shade400 : Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                  onPressed: () => favController.toggleFavorito(argumentos),
+                );
+              }),
+            ],
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -151,7 +172,6 @@ class GameDetailPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 24),
-
                   _SectionCard(
                     titulo: "Informações",
                     icon: Icons.info_outline,
@@ -192,7 +212,6 @@ class GameDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   _SectionCard(
                     titulo: "Publicação",
                     icon: Icons.business,
@@ -237,13 +256,13 @@ class _MidiaChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      avatar: Icon(icon, size: 16, color: color.withOpacity(0.9)),
+      avatar: Icon(icon, size: 16, color: color.withValues(alpha: 0.9)),
       label: Text(
         label,
         style: const TextStyle(color: Colors.white70, fontSize: 12),
       ),
-      backgroundColor: color.withOpacity(0.2),
-      side: BorderSide(color: color.withOpacity(0.5)),
+      backgroundColor: color.withValues(alpha: 0.2),
+      side: BorderSide(color: color.withValues(alpha: 0.5)),
       padding: const EdgeInsets.symmetric(horizontal: 4),
     );
   }
